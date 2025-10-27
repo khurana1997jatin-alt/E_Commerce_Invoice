@@ -3,7 +3,7 @@ import pandas as pd
 import pickle as pkl
 
 # 🚀 Load model
-MODEL_PATH = r'C:\Users\ASUS\OneDrive\Desktop\Project\E_Commerce_Invoice\E_Commerce_Invoice_model9.pkl'
+MODEL_PATH = 'E_Commerce_Invoice_model9.pkl'
 model = pkl.load(open(MODEL_PATH, 'rb'))
 
 # ✅ Define expected country columns from training
@@ -72,3 +72,4 @@ if st.button('Predict'):
             st.success(f'💰 Predicted Total Invoice Price: ₹{prediction:,.2f}')
         except Exception as e:
             st.error(f"Prediction failed: {e}")
+
