@@ -2,12 +2,9 @@ import streamlit as st
 import pandas as pd
 import pickle as pkl
 
-# 🚀 Load model and data
+# 🚀 Load model
 MODEL_PATH = r'C:\Users\ASUS\OneDrive\Desktop\Project\E_Commerce_Invoice\E_Commerce_Invoice_model9.pkl'
-DATA_PATH = r'C:\Users\ASUS\OneDrive\Desktop\Project\E_Commerce_Invoice\data.csv'
-
 model = pkl.load(open(MODEL_PATH, 'rb'))
-raw_data = pd.read_csv(DATA_PATH, encoding='latin1')
 
 # ✅ Define expected country columns from training
 expected_country_cols = [
@@ -22,18 +19,6 @@ expected_country_cols = [
     'Country_Sweden', 'Country_Switzerland', 'Country_USA', 'Country_United Arab Emirates',
     'Country_United Kingdom', 'Country_Unspecified'
 ]
-
-# ✅ One-hot encode country column if needed
-if 'Country' in raw_data.columns:
-    country_dummies = pd.get_dummies(raw_data['Country'], prefix='Country')
-    data = pd.concat([raw_data.drop('Country', axis=1), country_dummies], axis=1)
-else:
-    data = raw_data.copy()
-
-# ✅ Add missing country columns with zeros
-for col in expected_country_cols:
-    if col not in data.columns:
-        data[col] = 0
 
 # 🖼️ Streamlit UI setup
 st.set_page_config(page_title="Retail Invoice Predictor", layout="centered")
@@ -74,9 +59,7 @@ input_columns = ['InvoiceMonth', 'InvoiceYear', 'Day', 'Hour', 'Weekday'] + expe
     'Quantity', 'UnitPrice', 'Total Price', 'TotalProductQuantity', 'TotalInvoiceQuantity'
 ]
 
-# ✅ Sanity check
 assert len(input_columns) == len(input_values), f"Mismatch: {len(input_columns)} columns vs {len(input_values)} values"
-
 input_df = pd.DataFrame([input_values], columns=input_columns)
 
 # 🔮 Predict
@@ -89,4 +72,3 @@ if st.button('Predict'):
             st.success(f'💰 Predicted Total Invoice Price: ₹{prediction:,.2f}')
         except Exception as e:
             st.error(f"Prediction failed: {e}")
-
